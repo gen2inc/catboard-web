@@ -116,4 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let meow = theMeowButton();
         document.getElementById("cars").value += `${meow} `;
     }, false);
+    document.getElementById("clear-meows").addEventListener('click', function() {
+        document.getElementById("cars").value = "";
+    }, false);
 });
