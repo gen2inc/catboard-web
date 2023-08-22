@@ -1,3 +1,38 @@
+function fallbackCopyTextToClipboard(text) {
+    var textArea = document.createElement("textarea");
+    textArea.value = text;
+    
+    // Avoid scrolling to bottom
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+  
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+  
+    try {
+      var successful = document.execCommand('copy');
+      var msg = successful ? 'successful' : 'unsuccessful';
+      console.log('Fallback: Copying text command was ' + msg);
+    } catch (err) {
+      console.error('Fallback: Oops, unable to copy', err);
+    }
+  
+    document.body.removeChild(textArea);
+  }
+function copyTextToClipboard(text) {
+    if (!navigator.clipboard) {
+      fallbackCopyTextToClipboard(text);
+      return;
+    }
+    navigator.clipboard.writeText(text).then(function() {
+      console.log('Async: Copying to clipboard was successful!');
+    }, function(err) {
+      console.error('Async: Could not copy text: ', err);
+    });
+}
+
 function theMeowButton() {
     let meows = ['mraaowwww', 'mraaowww', 'meeowwww', 'mraaowww', 'meeeowwww', 'mrrrrpp', 'mmreaaaaaooowww', 'mreeaoooww', 'mrrrp', 'mrrrrr', 'mrrrrrppp', 'meeeaaaowww', 'mraaoowww', 'mraooowwww', 'mrrrpp', 'mrrrp', 'miau', 'mmeeoow']
     let meowAccents = ['~','!','...',' ^^',' :3']
@@ -71,7 +106,12 @@ function theMeowButton() {
     return meows[Math.floor(Math.random()*meows.length)];
 }
 
+
+
 document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById("copy-meows").addEventListener('click', function() {
+        copyTextToClipboard(document.getElementById("cars").value);
+    }, false);
     document.getElementById("gen-meows").addEventListener('click', function() {
         let meow = theMeowButton();
         document.getElementById("cars").value += `${meow} `;
